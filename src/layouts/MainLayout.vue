@@ -1,102 +1,62 @@
 <template>
   <q-layout view="lHh Lpr lFf">
+    <!-- ヘッダー -->
     <q-header elevated>
       <q-toolbar>
-        <q-btn
-          flat
-          dense
-          round
-          icon="menu"
-          aria-label="Menu"
-          @click="toggleLeftDrawer"
-        />
-
-        <q-toolbar-title>
-          Quasar App
-        </q-toolbar-title>
-
-        <div>Quasar v{{ $q.version }}</div>
+        <q-btn flat dense round icon="menu" @click="leftDrawerOpen = !leftDrawerOpen" />
+        <q-toolbar-title>ランチョン</q-toolbar-title>
       </q-toolbar>
     </q-header>
 
-    <q-drawer
-      v-model="leftDrawerOpen"
-      show-if-above
-      bordered
-    >
+    <!-- ドロワー -->
+    <q-drawer v-model="leftDrawerOpen" show-if-above bordered>
       <q-list>
-        <q-item-label
-          header
-        >
-          Essential Links
-        </q-item-label>
-
-        <EssentialLink
-          v-for="link in linksList"
-          :key="link.title"
-          v-bind="link"
-        />
+        <q-item clickable to="/">
+          <q-item-section avatar><q-icon name="home" /></q-item-section>
+          <q-item-section>タイムライン</q-item-section>
+        </q-item>
+        <q-item clickable to="/profile">
+          <q-item-section avatar><q-icon name="person" /></q-item-section>
+          <q-item-section>プロフィール</q-item-section>
+        </q-item>
+        <q-item clickable to="/settings">
+          <q-item-section avatar><q-icon name="settings" /></q-item-section>
+          <q-item-section>せってい</q-item-section>
+        </q-item>
       </q-list>
     </q-drawer>
 
+    <!-- メイン表示 -->
     <q-page-container>
       <router-view />
     </q-page-container>
+
+    <!-- 投稿ボタン (FAB) -->
+    <q-btn
+      fab
+      icon="add"
+      color="primary"
+      class="q-fab bottom-right"
+      @click="goToPost"
+    />
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue';
-import EssentialLink, { type EssentialLinkProps } from 'components/EssentialLink.vue';
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
 
-const linksList: EssentialLinkProps[] = [
-  {
-    title: 'Docs',
-    caption: 'quasar.dev',
-    icon: 'school',
-    link: 'https://quasar.dev'
-  },
-  {
-    title: 'Github',
-    caption: 'github.com/quasarframework',
-    icon: 'code',
-    link: 'https://github.com/quasarframework'
-  },
-  {
-    title: 'Discord Chat Channel',
-    caption: 'chat.quasar.dev',
-    icon: 'chat',
-    link: 'https://chat.quasar.dev'
-  },
-  {
-    title: 'Forum',
-    caption: 'forum.quasar.dev',
-    icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev'
-  },
-  {
-    title: 'Twitter',
-    caption: '@quasarframework',
-    icon: 'rss_feed',
-    link: 'https://twitter.quasar.dev'
-  },
-  {
-    title: 'Facebook',
-    caption: '@QuasarFramework',
-    icon: 'public',
-    link: 'https://facebook.quasar.dev'
-  },
-  {
-    title: 'Quasar Awesome',
-    caption: 'Community Quasar projects',
-    icon: 'favorite',
-    link: 'https://awesome.quasar.dev'
-  }
-];
-
-const leftDrawerOpen = ref(false);
-
-function toggleLeftDrawer () {
-  leftDrawerOpen.value = !leftDrawerOpen.value;
+const leftDrawerOpen = ref(false)
+const router = useRouter()
+const goToPost = () => {
+  void router.push('/post')
 }
 </script>
+
+<style scoped>
+.q-fab.bottom-right {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+}
+</style>
